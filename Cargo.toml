@@ -1,0 +1,55 @@
+[package]
+name = "rust_database_system"
+version = "0.1.0"
+edition = "2021"
+authors = ["Database System Team"]
+license = "BSD-3-Clause"
+description = "A production-ready, high-performance Rust database abstraction layer for unified access to multiple database backends"
+repository = "https://github.com/kcenon/rust_database_system"
+keywords = ["database", "sql", "sqlite", "postgres", "abstraction"]
+categories = ["database"]
+
+[dependencies]
+# Error handling
+thiserror = "2.0"
+
+# Async runtime
+tokio = { version = "1.41", features = ["full"] }
+async-trait = "0.1"
+
+# Database drivers
+rusqlite = { version = "0.32", features = ["bundled"], optional = true }
+deadpool-sqlite = { version = "0.9", optional = true }
+tokio-postgres = { version = "0.7", optional = true }
+deadpool-postgres = { version = "0.14", optional = true }
+mysql_async = { version = "0.34", optional = true }
+redis = { version = "0.27", features = ["tokio-comp"], optional = true }
+mongodb = { version = "3.1", optional = true }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Thread safety
+parking_lot = "0.12"
+
+# Utilities
+chrono = "0.4"
+
+[dev-dependencies]
+tokio-test = "0.4"
+criterion = "0.5"
+proptest = "1.4"
+
+[features]
+default = ["sqlite"]
+sqlite = ["rusqlite", "deadpool-sqlite"]
+postgres = ["tokio-postgres", "deadpool-postgres"]
+mysql = ["mysql_async"]
+redis_support = ["redis"]
+mongodb_support = ["mongodb"]
+all-databases = ["sqlite", "postgres", "mysql", "redis_support", "mongodb_support"]
+
+[[bench]]
+name = "database_benchmarks"
+harness = false
